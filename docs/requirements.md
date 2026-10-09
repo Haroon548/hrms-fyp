@@ -2,11 +2,13 @@
 
 The build checklist for the Hotel & Restaurant Management System, built for **Ramada by Wyndham Multan**. It is taken from the team's SRS, which stays the formal document. This file is the working list: what to build, where it comes from in the SRS, and what has been decided. How each page looks is in [design.md](design.md).
 
-**Priority:** **MVP** = must be in the first working version. **Later** = nice to have once the MVP works. **Future** = out of scope; listed as future work in the SRS.
+**Priority:** **MVP** = must be in the first working version. **Later** = build once the MVP works. **Optional** = only if time allows. **Future** = out of scope; listed as future work in the SRS.
 
 **Status:** ☐ not started · ◐ in progress · ☑ done
 
-**Build order:** shared layout (header, footer, design tokens) → authentication and email → rooms → room booking → restaurant and food orders → table reservation → billing → feedback → contact and information pages → admin dashboard.
+**Build order:** shared layout (header, footer, design tokens) → authentication and email → rooms → room booking + availability calendars → restaurant and food orders → QR table ordering + kitchen screen → table reservation → billing + charge to room → feedback with verified reviews → contact and information pages → admin dashboard → reports and WhatsApp (Later) → optional extras.
+
+**Signature features** (beyond the SRS and Ramada's site; see the "Signature features" section): charge to room with one bill at check-out, QR table ordering with a kitchen screen, availability calendars, verified-guest reviews.
 
 ---
 
@@ -29,6 +31,11 @@ Choices made where the SRS is vague, conflicting, or not practical for this proj
 | D11 | The site uses the real **Ramada by Wyndham Multan** name, logo and photos. The hotel gave permission for this university project. Keep that permission in writing. The footer credits the university project. | Agreed with the hotel. |
 | D12 | The look and layout follow the official site ramadamultan.com, with the improvements listed in [design.md](design.md). The booking steps follow Wyndham's booking pages, but run on our own site. | The supervisor asked for the Ramada Multan site as the main inspiration. |
 | D13 | Contact form messages are saved in the database for the admin to read, and the admin is notified by email. | Same as the Ramada contact page, but the messages don't get lost. |
+| D14 | **Everything must work on free hosting with a free subdomain.** No paid servers, domains or services. Nothing that needs SMS, card payments, live connections (websockets) or server access. | The client will host it for free (InfinityFree). |
+| D15 | **All libraries and fonts are stored inside the project** (`assets/vendor/`, `assets/fonts/`): Bootstrap, Font Awesome, Chart.js, the QR code library, the photo viewer, the date picker and Fira Sans. Nothing is loaded from a CDN. The only exceptions are the Google Map on the Contact page and email sending. | The viva laptop may be offline, and the client gets one self-contained folder. |
+| D16 | **No scheduled jobs.** Free hosting can't run tasks on a timer. Tidy-up work (e.g. marking past reservations as completed, expiring old tokens) runs when a relevant page is opened, such as the admin dashboard. No "reminder" emails that depend on a date arriving. | InfinityFree has no cron jobs. |
+| D17 | Pages that refresh themselves (the kitchen screen) check for changes **every 20–30 seconds at most** and stop while the browser tab is hidden. | Free hosting allows about 50,000 requests a day; checking every few seconds would use that up. |
+| D18 | **Order types:** *Room service* (in-house guest, charged to the room), *Dine-in* (at a table, from the QR code or the website), *Takeaway* (collect from the restaurant). Dine-in and takeaway are paid at the restaurant. | Needed for charge to room and QR ordering. |
 
 ---
 
@@ -47,6 +54,7 @@ Choices made where the SRS is vague, conflicting, or not practical for this proj
 | FR-AUTH-07 | A logged-in user can change their own password. | Later | ☐ |
 | FR-AUTH-08 | **Email verification:** after registering, the customer gets an email with a link. Until they click it, they can't log in, and the login page offers "Resend verification email". The link works once and expires after 24 hours. Can be turned off (D10). | MVP | ☐ |
 | FR-AUTH-09 | **Forgot password:** the customer enters their email and gets a reset link. The link works once and expires after 1 hour. The page shows the same message whether or not the email exists, so it doesn't reveal who has an account. | MVP | ☐ |
+
 ### Rooms (SRS 2.4.1, 3.1.2, 5.4)
 
 | ID | Requirement | Priority | Status |
@@ -79,7 +87,7 @@ Choices made where the SRS is vague, conflicting, or not practical for this proj
 | FR-MENU-01 | The admin can add, edit and delete menu categories. | MVP | ☐ |
 | FR-MENU-02 | The admin can add, edit and delete menu items (name, category, price, description, image, available yes/no). | MVP | ☐ |
 | FR-MENU-03 | Anyone can view the menu, grouped by category. | MVP | ☐ |
-| FR-ORD-01 | A logged-in customer can pick items and quantities and place an order. | MVP | ☐ |
+| FR-ORD-01 | A logged-in customer can pick items and quantities, choose the order type (D18) and place an order. Room service is only offered to guests who are checked in. | MVP | ☐ |
 | FR-ORD-02 | The order total is worked out on the server from current menu prices. | MVP | ☐ |
 | FR-ORD-03 | The admin can see all orders and update their status (pending, preparing, ready, completed, cancelled). | MVP | ☐ |
 | FR-ORD-04 | A customer can see their order history and each order's current status. | MVP | ☐ |
@@ -104,12 +112,13 @@ Choices made where the SRS is vague, conflicting, or not practical for this proj
 | FR-BILL-03 | The admin can mark an invoice as paid (cash). The payment date is saved. | MVP | ☐ |
 | FR-BILL-04 | The invoice page can be printed (see D7). | MVP | ☐ |
 | FR-BILL-05 | A customer can view their own invoices. | MVP | ☐ |
+| FR-BILL-06 | A stay's invoice includes its room service orders (FR-SIG-ROOM-03). | MVP | ☐ |
 
 ### Feedback (SRS 5.8)
 
 | ID | Requirement | Priority | Status |
 |---|---|---|---|
-| FR-FB-01 | A logged-in customer can submit a rating (1–5), a comment and a type (feedback / complaint). | MVP | ☐ |
+| FR-FB-01 | A logged-in customer can submit a rating (1–5), a comment and a type (feedback / complaint). Public reviews follow FR-SIG-REV. | MVP | ☐ |
 | FR-FB-02 | The admin can view all feedback and complaints. | MVP | ☐ |
 | FR-FB-03 | The admin can mark a complaint as resolved. | Later | ☐ |
 
@@ -121,7 +130,7 @@ Choices made where the SRS is vague, conflicting, or not practical for this proj
 | FR-ADM-02 | The dashboard shows total revenue from paid invoices. | MVP | ☐ |
 | FR-ADM-03 | The dashboard lists recent bookings, orders and feedback. | MVP | ☐ |
 | FR-ADM-04 | The admin can see the list of users and change a user's role. | MVP | ☐ |
-| FR-ADM-05 | Revenue and booking reports filtered by date range. | Later | ☐ |
+| FR-ADM-05 | Revenue and booking reports filtered by date range (see FR-RPT). | Later | ☐ |
 
 ### Email (D4, D9, D10)
 
@@ -155,6 +164,75 @@ Information pages copied from ramadamultan.com and improved. Content is in desig
 
 ---
 
+## Signature features
+
+Features that neither the SRS nor ramadamultan.com has. They make the project stand out, and all of them work on free hosting (D14). Screens are described in design.md, section 4.
+
+### Charge to room and one bill at check-out
+
+Answers the SRS problem "inefficient communication between hotel and restaurant departments" (SRS 1.6).
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-SIG-ROOM-01 | A customer whose booking is **checked in** can order food as **Room service**. The order shows their room number and is **added to the room bill** instead of being paid separately. | MVP | ☐ |
+| FR-SIG-ROOM-02 | While a guest is staying, they can see their running room bill (room nights so far plus room service orders) in My Account. | MVP | ☐ |
+| FR-SIG-ROOM-03 | At check-out, the admin creates **one invoice** for the stay: room nights plus every room service order, each listed with date and amount, and one grand total. | MVP | ☐ |
+| FR-SIG-ROOM-04 | Room service can't be charged to a booking that is checked out or cancelled. Checked on the server. | MVP | ☐ |
+
+### QR code table ordering and kitchen screen
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-SIG-QR-01 | The admin can print a **QR code for each dining table**. The code holds a link to the menu with the table number, built from the site address in `config/config.php`, so the codes still work if the site address changes (reprint them). | MVP | ☐ |
+| FR-SIG-QR-02 | Scanning the code opens the menu on the phone with "Table 5" shown at the top. The order type is set to Dine-in for that table. | MVP | ☐ |
+| FR-SIG-QR-03 | A guest can order from the table **without an account** by entering just a name, so walk-in diners can use it. Logged-in customers have the order saved to their history. | MVP | ☐ |
+| FR-SIG-QR-04 | **Kitchen screen** (admin login): new, preparing and ready orders shown in three columns, each card with table or room number, items, notes and time since ordered. One click moves an order to the next column. | MVP | ☐ |
+| FR-SIG-QR-05 | The kitchen screen checks for new orders on its own (D17) and plays a short sound when a new order arrives. | MVP | ☐ |
+| FR-SIG-QR-06 | The guest's order page shows the current status (Received → Preparing → Ready) and updates itself the same way. | Later | ☐ |
+
+### Availability calendars
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-SIG-CAL-01 | Each room type page shows a **month calendar** with free dates in green and full dates in red, with arrows to move between months. Clicking two dates fills in the booking box. | MVP | ☐ |
+| FR-SIG-CAL-02 | **Admin occupancy chart:** rooms listed down the side, dates across the top (two weeks at a time), and each booking drawn as a coloured bar (colour by status). Clicking a bar opens the booking. | MVP | ☐ |
+| FR-SIG-CAL-03 | Both calendars use the same availability check as booking (FR-BOOK-03), so what's shown always matches what can be booked. | MVP | ☐ |
+
+### Verified-guest reviews
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-SIG-REV-01 | A customer can leave a **public review** only for a stay that is checked out or an order that is completed, and only one review per stay or order. | MVP | ☐ |
+| FR-SIG-REV-02 | Reviews show the guest's first name, the star rating, the date and a **"✓ Verified stay"** or **"✓ Verified order"** badge. | MVP | ☐ |
+| FR-SIG-REV-03 | The home page shows the average rating and the latest three reviews (replacing Ramada's TripAdvisor box). | MVP | ☐ |
+| FR-SIG-REV-04 | The admin can hide an inappropriate review. Complaints stay private and are never shown publicly. | MVP | ☐ |
+
+### Reports and charts
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-RPT-01 | A Reports page with charts (Chart.js): revenue per month, occupancy rate per month, most popular dishes, average rating over time. | Later | ☐ |
+| FR-RPT-02 | Each report can be filtered by date range and downloaded as a **CSV file** that opens in Excel. | Later | ☐ |
+
+### WhatsApp
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-WA-01 | A floating "Chat on WhatsApp" button on every public page opens a chat with the hotel's WhatsApp number (a free `wa.me` link; the number is set in `config/config.php`). | Later | ☐ |
+| FR-WA-02 | The booking, order and reservation confirmation pages have a "Share on WhatsApp" button with the details filled in. | Later | ☐ |
+
+### Optional extras (only if time allows)
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| FR-OPT-01 | **Promo codes:** the admin creates codes (e.g. "EID20") with a percentage or fixed discount, valid dates and a usage limit. Customers enter a code at checkout. | Optional | ☐ |
+| FR-OPT-02 | **Weekend and season prices:** each room type can have a different price on weekends and during date ranges set by the admin. The total adds up each night's price. | Optional | ☐ |
+| FR-OPT-03 | **Activity log:** important admin actions (status changes, price changes, deletions, payments) are recorded with who, what and when, and listed for the admin. | Optional | ☐ |
+| FR-OPT-04 | **Change booking dates:** a customer can change the dates of an upcoming booking if the room is free for the new dates. | Optional | ☐ |
+| FR-OPT-05 | **Urdu / English switch:** all public page text is available in both languages. | Optional | ☐ |
+
+---
+
 ## Non-functional requirements (SRS 3.5)
 
 | ID | Requirement | How it's met |
@@ -168,6 +246,8 @@ Information pages copied from ramadamultan.com and improved. Content is in desig
 | NFR-07 Maintainability | Modular code that is easy to find and change. | One folder per feature; shared code in `includes/`; documented setup. |
 | NFR-08 Portability | Runs on XAMPP and on free PHP + MySQL hosting. | No Composer, npm or build step; libraries such as PHPMailer are copied into the project; one config file; one SQL import. |
 | NFR-10 Security | Email verification and password reset links can't be guessed or reused. | Random tokens (`random_bytes`), stored hashed, single use, with an expiry time. |
+| NFR-11 Offline demo | Everything except the map and email works with no internet. | All libraries and fonts stored in the project (D15). |
+| NFR-12 Free hosting | Runs within free hosting limits. | No scheduled jobs (D16); self-refreshing pages check at most every 20–30 seconds (D17); photos compressed before upload. |
 | NFR-09 Backup | Data can be backed up and restored. | Manual export/import through phpMyAdmin (see D8). |
 
 ---

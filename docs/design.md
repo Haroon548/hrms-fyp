@@ -43,7 +43,11 @@ Put these in one CSS file (`assets/css/style.css`) as CSS variables. Use the var
 
 ### Font
 
-- **Fira Sans** from Google Fonts, weights **300, 400, 600**. One font for the whole site.
+- **Fira Sans**, weights **300, 400, 600**. One font for the whole site. Download the font files from Google Fonts once and store them in `assets/fonts/`, loaded with `@font-face`, so the site looks right offline (D15).
+
+### Libraries
+
+All stored in `assets/vendor/`, never loaded from a CDN (D15): Bootstrap 5 (CSS + JS), Font Awesome (free icons), GLightbox (photo viewer), flatpickr (date picker), Chart.js (report charts), and a QR code library such as qrcode.js. Keep the version number in each folder name, e.g. `assets/vendor/bootstrap-5.3.3/`.
 - Ramada's headings *look* thin because only weight 300 is loaded. To match that look, use **400** for headings, not bold.
 
 | Element | Size | Weight | Colour | Extra |
@@ -123,7 +127,7 @@ Make it one PHP function, e.g. `section_heading($title, $subtitle)`.
 ### Photo viewer (lightbox) — screenshot 10
 
 - Clicking any gallery or room photo opens it large on a dark see-through background, with ← → arrows, a round white ✕ to close, and a row of small thumbnails underneath. Hovering a photo shows a round black "+" in its centre (screenshot 05).
-- Use a small free library such as GLightbox (one CSS and one JS file in `assets/`), or Bootstrap's Modal + Carousel.
+- Use GLightbox (stored in `assets/vendor/`).
 
 ### Footer (`includes/footer.php`) — screenshot 03
 
@@ -138,6 +142,20 @@ Make it one PHP function, e.g. `section_heading($title, $subtitle)`.
 
 - 35×35px, red, 5px rounded corners, white ^ arrow, fixed at bottom right. Appears after scrolling down. **Must actually scroll to the top** (on Ramada's site it didn't respond in testing).
 
+### ★ WhatsApp button (Later)
+
+- Round green button (WhatsApp green `#25D366`, white WhatsApp icon), 56px, fixed at bottom left so it doesn't clash with back-to-top. Opens `https://wa.me/<number>` in a new tab. Only on public pages, not in the admin panel.
+
+### ★ Status badges
+
+Used in My Account, the admin panel and the kitchen screen. Small rounded Bootstrap badges:
+- Pending / New → yellow · Confirmed / Preparing → blue · Checked in / Ready → green · Completed / Checked out → dark grey · Cancelled → light grey with grey text.
+
+### ★ Star rating and verified badge
+
+- Stars in `--red` (filled and empty Font Awesome stars), with the number next to them ("4.6").
+- Verified badge: small text "✓ Verified stay" or "✓ Verified order" in green, under the guest's first name.
+
 ---
 
 ## 4. Pages
@@ -150,7 +168,7 @@ Each page lists the Ramada layout and what we change or add. Pages marked ★ do
 2. **★ Availability search bar,** overlapping the bottom of the slideshow: Check-in, Check-out, Guests, red **SEARCH ROOMS** button. Goes to the room search results.
 3. **Welcome:** section heading "Ramada By Wyndham Multan" / "The Spot of Serenity & Comfort in Multan", then the intro text on the left and the lobby photo on the right. **The text must always be visible.** On Ramada's site it only fades in on scroll and sometimes doesn't appear at all.
 4. **Rooms:** section heading "ROOMS" / "All Designed To Customize Your Need" and the 6 room cards on a `--bg-alt` background.
-5. **Multan | Reviews:** two columns separated by a thin red line on top. Left: a Multan photo linking to the Multan page. Right: **★ the latest 3 reviews from our own feedback module** with star ratings and the average rating, instead of the TripAdvisor box.
+5. **Multan | Reviews:** two columns separated by a thin red line on top. Left: a Multan photo linking to the Multan page. Right: **★ the average rating and the latest 3 verified reviews** (stars, first name, date, comment, "✓ Verified stay" badge), instead of the TripAdvisor box.
 6. **Our Facilities & Services:** photo cards with a dark text panel on the right half (Multi Cuisine Restaurant, Meeting Facilities, Swimming Pool, Health Club).
 7. Footer.
 
@@ -165,6 +183,7 @@ Each page lists the Ramada layout and what we change or add. Pages marked ★ do
 - **Right (4 columns):**
   - **★ Booking box** at the top: price per night, check-in and check-out dates, guests, red **BOOK THIS ROOM** button, and a line like "Free cancellation until 6 PM on the day of arrival".
   - Below it, the **"Rooms" box** (`--bg-card`): every room type with a 40×40 thumbnail and name. The current room is red.
+- **★ Availability calendar** (full width, under the amenities list): section sub-heading "Availability", then one month at a time with ‹ › arrows. Each day is a square: free = light green with the price underneath in small text, full = light red and crossed out, past = grey. Clicking a free check-in day and then a check-out day highlights the range in `--red` and fills in the booking box. On phones the squares shrink and the price is hidden.
 - Show the **correct room name** everywhere. Ramada's pages have copy-paste mistakes, e.g. the Executive Suite page says "Business Room".
 
 ### ★ Booking flow — screenshots 15–19 (copied from Wyndham, kept on our site)
@@ -184,7 +203,26 @@ Each page lists the Ramada layout and what we change or add. Pages marked ★ do
 - One section per restaurant (Buzz 76, Cafe Saints, Executive Lounge): section heading, description, **opening times**, and a row of 3 photos.
 - Meal icons for Breakfast, Lunch, Hi-Tea and Dinner under Buzz 76.
 - **★ Menu:** below the restaurants, the full menu with category tabs (same style as the gallery tabs). Each item shows its name, short description, price and an **Add** button. A cart summary (sticky on the right on desktop, a bottom bar on phones) with **PLACE ORDER**.
+- **★ Order type** in the cart: three large option buttons. **Room service** (only shown to checked-in guests; shows "Room 214 — added to your room bill"), **Dine-in** (pick a table, or set automatically from the QR code), **Takeaway**. Plus a notes box ("no onions").
 - **★** A **RESERVE A TABLE** button in each restaurant section, going to the table reservation page.
+
+### ★ QR table menu (opened by scanning a table's QR code)
+
+- Phone-first page. A red bar at the top: hotel logo and **"Table 5 · Buzz 76"**.
+- The menu with category tabs that scroll sideways, items as compact rows (photo, name, price, + button).
+- A fixed bottom bar: "3 items · PKR 4,350 · **VIEW ORDER**". The order screen asks only for a name if the guest isn't logged in, then **PLACE ORDER**.
+- After ordering: a big tick, the order number and a status line (Received → Preparing → Ready).
+
+### ★ Printable table QR cards (admin)
+
+- One card per table, sized to print 4 on an A4 page: hotel logo, large QR code, "Table 5", and "Scan to see the menu and order". A **Print** button uses the browser's print.
+
+### ★ Kitchen screen (admin)
+
+- Full-screen page meant for a tablet or monitor in the kitchen. No sidebar. Dark grey background so cards stand out.
+- Three columns: **NEW** (yellow header), **PREPARING** (blue), **READY** (green), with a count in each header.
+- Each order is a white card: big "Table 5" or "Room 214" or "Takeaway — Ali", the time since it was ordered ("6 min"; turns red after 20 min), the items with quantities in large text, notes in red, and one large button to move it to the next column ("Start" → "Ready" → "Done").
+- A small line at the top: "Updated 10 seconds ago". A short sound plays when a new order arrives.
 
 ### ★ Table reservation
 
@@ -223,12 +261,23 @@ Each page lists the Ramada layout and what we change or add. Pages marked ★ do
 ### ★ My Account
 
 - Tabs: My Bookings · My Orders · My Reservations · My Invoices · Profile.
-- Each tab shows a table with a coloured status badge (Confirmed = green, Pending = yellow, Cancelled = grey) and action buttons (Cancel, View invoice).
+- Each tab shows a table with a status badge and action buttons (Cancel, View invoice, Leave a review).
+- **★ Current stay card** at the top while a guest is checked in: room number, dates, and the **running room bill**: room nights so far plus each room service order (date, items, amount), with the total so far. A red **ORDER ROOM SERVICE** button goes to the menu with Room service already selected.
+- **★ Leave a review** button appears next to checked-out stays and completed orders that haven't been reviewed yet.
+
+### ★ Invoice (print-friendly)
+
+- White page, hotel logo and address at the top left, "INVOICE", invoice number and date at the top right, the guest's details below.
+- A table of lines. For a stay: "Room nights — Pool Wing × 3 nights", then one line per room service order ("12 Nov — Room service order #45"), then subtotal and **Total** in bold, and "Paid — Cash — 14 Nov" or "Unpaid".
+- **Print** button (hidden when printing). The header, footer and menus don't print.
 
 ### ★ Admin panel
 
 - Separate simple layout: dark sidebar on the left with the hotel logo and links (Dashboard, Rooms, Room Types, Bookings, Menu, Orders, Tables, Reservations, Invoices, Feedback, Messages, Users). White content area on the right.
+- Sidebar links also include **Kitchen Screen**, **Occupancy**, **Table QR Codes** and (Later) **Reports**.
 - Dashboard: count cards across the top (red numbers), revenue total, then tables of recent bookings, orders and feedback.
+- **★ Occupancy chart:** a grid with room numbers down the left (grouped by room type) and 14 days across the top, today's column highlighted. Each booking is a coloured bar across its nights, coloured by status (confirmed blue, checked in green, checked out grey), showing the guest's name. ‹ › buttons move by a week. Clicking a bar opens the booking.
+- **★ Reports (Later):** date-range filter at the top, then chart cards (revenue per month as bars, occupancy rate as a line, top dishes as horizontal bars, average rating as a line), each with a **Download CSV** button. Charts use the brand red with greys.
 - Keep the same font and red. Use plain Bootstrap tables, forms and badges.
 
 ---
