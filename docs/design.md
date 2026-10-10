@@ -285,7 +285,7 @@ Brand stays the same (red, Fira Sans, real photos); the layout is livelier than 
 - **Grid:** 4 columns (3 on tablets, 2 on phones), each photo in a 4px `--line` frame at 4:3; on hover it zooms slightly, a caption fades up from the bottom and a round "+" appears. "Showing 16 photos" above the grid.
 - **Filtering** without reloading: photos slide into their new places (GSAP Flip, FR-UX-03). The grid keeps its height until every photo has landed and then eases to the new height, so the footer never shows behind moving photos. The address changes to `gallery.php?tab=rooms`, so tabs can be linked to (works without JavaScript too).
 - **Photo viewer** (GLightbox, dark caption): only steps through the photos in the current tab; credited photos show "Photo: name / Wikimedia Commons, licence" under the caption.
-- **Credits line** under the grid for the Multan photos (D21). Grid photos are small copies (`assets/images/gallery/thumbs/`, 480px) so the page stays light; the viewer loads the large copy.
+- **Credits** for the Multan photos (D21) appear only in the photo viewer's caption ("Photo: name / Wikimedia Commons, licence"); the team removed the credits paragraph under the grid. The licence (CC BY-SA) needs this caption, so it stays. Grid photos are small copies (`assets/images/gallery/thumbs/`, 480px) so the page stays light; the viewer loads the large copy.
 
 ### Contact — screenshots 11, 12
 

@@ -3031,16 +3031,6 @@ html.intro-active .search-bar {
     opacity: 1;
     transform: none;
 }
-.gallery-credits {
-    margin: 30px 0 0;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--muted);
-}
-.gallery-credits a {
-    color: var(--muted);
-    text-decoration: underline;
-}
 .glightbox-clean .gslide-desc {
     color: rgba(255, 255, 255, 0.7);
     font-family: 'Fira Sans', Arial, sans-serif;

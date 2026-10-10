@@ -6,7 +6,7 @@
  */
 require_once 'includes/init.php';
 
-$photos = db()->query('SELECT category, file, caption, credit, source_url FROM gallery_images ORDER BY sort_order, id')->fetchAll();
+$photos = db()->query('SELECT category, file, caption, credit FROM gallery_images ORDER BY sort_order, id')->fetchAll();
 
 // Tabs in Ramada's order, plus our Multan tab; only categories that have photos
 $tabOrder = ['Banquet', 'Health & Recreation', 'Lobby', 'Restaurants', 'Rooms', 'Multan'];
@@ -46,7 +46,6 @@ for ($round = 0; count($orbit) < 16 && $round < 10; $round++) {
     }
 }
 
-$credited = array_filter($photos, function ($p) { return $p['credit'] !== ''; });
 
 $page_title = 'Gallery | ' . HOTEL_NAME;
 $page_description = 'Photos of Ramada by Wyndham Multan: rooms, restaurants, the lobby, events, the health club, and the city of Multan.';
@@ -106,19 +105,6 @@ include 'includes/header.php';
             <?php endforeach; ?>
         </div>
 
-        <?php if ($credited): ?>
-            <p class="gallery-credits">
-                <i class="fa-regular fa-copyright" aria-hidden="true"></i>
-                Multan photos are from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>, shared under Creative Commons licences:
-                <?php
-                $parts = [];
-                foreach ($credited as $p) {
-                    $parts[] = '<a href="' . e($p['source_url']) . '" target="_blank" rel="noopener">' . e($p['caption']) . '</a> (' . e(preg_replace('#^Photo: (.*) / Wikimedia Commons, #', '$1, ', $p['credit'])) . ')';
-                }
-                echo implode('; ', $parts);
-                ?>.
-            </p>
-        <?php endif; ?>
     </div>
 </section>
 

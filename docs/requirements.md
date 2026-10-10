@@ -445,7 +445,7 @@ To be filled in during and after the build (SRS Chapter 6). Each test links to a
 | TC-GAL-01 | FR-WEB-03 | Open the Gallery | gallery.php | 72 photos; tabs with counts (Banquet 22, Health 3, Lobby 6, Restaurants 16, Rooms 16, Multan 9) | As expected | Pass |
 | TC-GAL-02 | FR-UX-03 | Click the Rooms tab | Click | 16 photos slide into place, address becomes gallery.php?tab=rooms | As expected | Pass |
 | TC-GAL-03 | FR-WEB-03 | Open a photo after filtering | Click the first Rooms photo | Photo viewer steps through only the 16 Rooms photos | 16 slides | Pass |
-| TC-GAL-04 | D21 | Open a Multan photo | Multan tab, any photo | Caption with photographer and licence; full credits under the grid | "Photo: ZainShahid117 / Wikimedia Commons, CC BY-SA 3.0"; 9 credit links | Pass |
+| TC-GAL-04 | D21 | Open a Multan photo | Multan tab, any photo | Caption with photographer and licence (the credits paragraph under the grid was later removed at the team's request) | "Photo: ZainShahid117 / Wikimedia Commons, CC BY-SA 3.0"; 9 credit links | Pass |
 | TC-GAL-05 | FR-WEB-03 | Open a tab from a link | gallery.php?tab=lobby | Lobby tab active, 6 photos | As expected | Pass |
 | TC-LIVE-01 | FR-LIVE-01, FR-SIG-QR-06 | Guest watches their order while the kitchen taps Start preparing | Two browsers: guest on the order page, admin on the kitchen screen | Guest's page shows "Preparing" without reloading | Changed after 1.0 s, 0 page reloads | Pass |
 | TC-LIVE-02 | FR-LIVE-01, FR-SIG-QR-05 | Kitchen screen open while a guest places an order | Takeaway order | New card appears by itself | Appeared after 1.1 s | Pass |
