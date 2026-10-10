@@ -14,7 +14,7 @@ $counts = [];
 foreach ([
     ['fa-solid fa-users', 'Customers', "SELECT COUNT(*) FROM users WHERE role = 'customer'", ''],
     ['fa-solid fa-door-open', 'Rooms', 'SELECT COUNT(*) FROM rooms', 'admin/rooms.php'],
-    ['fa-solid fa-bed', 'Bookings', "SELECT COUNT(*) FROM bookings WHERE status <> 'cancelled'", 'admin/bookings.php?view=all'],
+    ['fa-solid fa-bed', 'Current & upcoming bookings', "SELECT COUNT(*) FROM bookings WHERE status = 'checked_in' OR (status = 'confirmed' AND check_out > CURDATE())", 'admin/bookings.php'],
     ['fa-solid fa-utensils', 'Food orders waiting', "SELECT COUNT(*) FROM orders WHERE status IN ('pending', 'preparing', 'ready')", 'admin/orders.php'],
     ['fa-regular fa-calendar-check', 'Table reservations today', "SELECT COUNT(*) FROM table_reservations WHERE reservation_date = CURDATE() AND status <> 'cancelled'", 'admin/reservations.php'],
     ['fa-regular fa-envelope', 'Unread messages', 'SELECT COUNT(*) FROM contact_messages WHERE is_handled = 0', 'admin/messages.php'],

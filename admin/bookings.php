@@ -1,8 +1,9 @@
 <?php
 /*
- * Admin: all room bookings (FR-BOOK-08). Quick views for the front desk (arrivals today,
- * in house, departures today, upcoming, cancelled), a search box, and one-click
- * check in / check out. Details and room moves are on booking.php.
+ * Admin: all room bookings (FR-BOOK-08). Quick views for the front desk: arrivals today,
+ * in house, departures today, current & upcoming (the default, with no past stays), past stays,
+ * all bookings and cancelled; a search box; and one-click check in / check out.
+ * Details and room moves are on booking.php.
  */
 require_once '../includes/init.php';
 require_once '../includes/billing.php';
@@ -14,7 +15,9 @@ $views = [
     'arrivals'   => ['Arrivals today', "b.status = 'confirmed' AND b.check_in = :today", 'b.check_in, r.room_number'],
     'in_house'   => ['In house', "b.status = 'checked_in'", 'b.check_out, r.room_number'],
     'departures' => ['Departures today', "b.status = 'checked_in' AND b.check_out <= :today", 'r.room_number'],
-    'upcoming'   => ['Upcoming', "b.status = 'confirmed' AND b.check_out > :today", 'b.check_in, b.id'],
+    // The default: guests staying now plus guests still to arrive (no past or cancelled stays)
+    'upcoming'   => ['Current & upcoming', "b.status = 'checked_in' OR (b.status = 'confirmed' AND b.check_out > :today)", "b.status = 'checked_in' DESC, b.check_in, b.id"],
+    'past'       => ['Past stays', "b.status = 'checked_out'", 'b.check_out DESC, b.id DESC'],
     'all'        => ['All bookings', '1 = 1', 'b.created_at DESC'],
     'cancelled'  => ['Cancelled', "b.status = 'cancelled'", 'b.cancelled_at DESC'],
 ];

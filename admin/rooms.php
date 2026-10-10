@@ -190,21 +190,34 @@ $stmt = db()->prepare(
     "SELECT r.*, rt.name AS type_name,
             (SELECT u.name FROM bookings b JOIN users u ON u.id = b.user_id
              WHERE b.room_id = r.id AND b.status IN ('confirmed', 'checked_in') AND b.check_in <= ? AND b.check_out > ?
-             LIMIT 1) AS tonight_guest,
+             ORDER BY b.status = 'checked_in' DESC LIMIT 1) AS tonight_guest,
+            (SELECT b.status FROM bookings b
+             WHERE b.room_id = r.id AND b.status IN ('confirmed', 'checked_in') AND b.check_in <= ? AND b.check_out > ?
+             ORDER BY b.status = 'checked_in' DESC LIMIT 1) AS tonight_status,
             (SELECT COUNT(*) FROM bookings b WHERE b.room_id = r.id AND b.status IN ('confirmed', 'checked_in') AND b.check_out > ?) AS upcoming,
             (SELECT COUNT(*) FROM bookings b WHERE b.room_id = r.id) AS ever_booked
      FROM rooms r JOIN room_types rt ON rt.id = r.room_type_id
      " . ($typeFilter ? 'WHERE r.room_type_id = ?' : '') . "
      ORDER BY rt.sort_order, rt.name, LENGTH(r.room_number), r.room_number"
 );
-$stmt->execute(array_merge([$today, $today, $today], $typeFilter ? [$typeFilter] : []));
+$stmt->execute(array_merge([$today, $today, $today, $today, $today], $typeFilter ? [$typeFilter] : []));
 $rooms = $stmt->fetchAll();
 
-$summary = ['total' => count($rooms), 'available' => 0, 'maintenance' => 0, 'tonight' => 0];
-foreach ($rooms as $room) {
-    $summary[$room['status'] === 'maintenance' ? 'maintenance' : 'available']++;
-    if ($room['tonight_guest'] !== null) $summary['tonight']++;
+// Tonight, each room is: under maintenance, occupied (guest checked in), booked (guest still to arrive) or free.
+// "Available" alone was confusing: it only meant "not under maintenance", even with a guest in the room.
+$summary = ['total' => count($rooms), 'free' => 0, 'taken' => 0, 'maintenance' => 0];
+foreach ($rooms as &$room) {
+    $room['tonight'] = $room['status'] === 'maintenance' ? 'maintenance'
+        : ($room['tonight_status'] === 'checked_in' ? 'occupied' : ($room['tonight_status'] === 'confirmed' ? 'booked_tonight' : 'free'));
+    if ($room['status'] === 'maintenance') {
+        $summary['maintenance']++;
+    } elseif ($room['tonight_guest'] !== null) {
+        $summary['taken']++;
+    } else {
+        $summary['free']++;
+    }
 }
+unset($room);
 
 // Room type <select> with the chosen one selected
 function type_options($types, $selected)
@@ -228,9 +241,9 @@ admin_open('Rooms', 'rooms', 'Room numbers, their type, and which ones can be bo
 
 <div class="stat-cards stat-cards-small">
     <div class="stat-card"><i class="fa-solid fa-door-open" aria-hidden="true"></i><strong><?= $summary['total'] ?></strong><span><?= $typeFilter ? 'Rooms of this type' : 'Rooms in the hotel' ?></span></div>
-    <div class="stat-card"><i class="fa-regular fa-circle-check" aria-hidden="true"></i><strong><?= $summary['available'] ?></strong><span>Available for booking</span></div>
+    <div class="stat-card"><i class="fa-regular fa-circle-check" aria-hidden="true"></i><strong><?= $summary['free'] ?></strong><span>Free tonight</span></div>
+    <div class="stat-card"><i class="fa-regular fa-moon" aria-hidden="true"></i><strong><?= $summary['taken'] ?></strong><span>Guests tonight (staying or arriving)</span></div>
     <div class="stat-card"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><strong><?= $summary['maintenance'] ?></strong><span>Under maintenance</span></div>
-    <div class="stat-card"><i class="fa-regular fa-moon" aria-hidden="true"></i><strong><?= $summary['tonight'] ?></strong><span>Booked tonight</span></div>
 </div>
 
 <?php if ($editRoom): ?>
@@ -334,8 +347,8 @@ admin_open('Rooms', 'rooms', 'Room numbers, their type, and which ones can be bo
                     <th scope="col" class="col-check"><input type="checkbox" data-check-all aria-label="Tick all rooms" form="roomsForm"></th>
                     <th scope="col">Room</th>
                     <th scope="col">Type</th>
-                    <th scope="col">Status</th>
                     <th scope="col">Tonight</th>
+                    <th scope="col">Guest</th>
                     <th scope="col">Upcoming</th>
                     <th scope="col" class="text-end">Actions</th>
                 </tr>
@@ -346,8 +359,8 @@ admin_open('Rooms', 'rooms', 'Room numbers, their type, and which ones can be bo
                         <td class="col-check"><input type="checkbox" name="ids[]" value="<?= $room['id'] ?>" form="roomsForm" aria-label="Tick room <?= e($room['room_number']) ?>"></td>
                         <th scope="row" class="room-no"><?= e($room['room_number']) ?></th>
                         <td><?= e($room['type_name']) ?></td>
-                        <td><?= status_badge($room['status']) ?></td>
-                        <td><?= $room['tonight_guest'] !== null ? '<i class="fa-solid fa-user" aria-hidden="true"></i> ' . e($room['tonight_guest']) : '<span class="admin-muted">Free</span>' ?></td>
+                        <td><?= status_badge($room['tonight']) ?></td>
+                        <td><?= $room['tonight_guest'] !== null ? '<i class="fa-solid fa-user" aria-hidden="true"></i> ' . e($room['tonight_guest']) . '<small class="d-block admin-muted">' . ($room['tonight_status'] === 'checked_in' ? 'Staying' : 'Arriving') . '</small>' : '<span class="admin-muted">—</span>' ?></td>
                         <td><?= $room['upcoming'] ? $room['upcoming'] . ' ' . ($room['upcoming'] == 1 ? 'booking' : 'bookings') : '<span class="admin-muted">None</span>' ?></td>
                         <td class="text-end">
                             <div class="table-actions">
