@@ -97,7 +97,7 @@ These steps use [InfinityFree](https://www.infinityfree.com), which offers free 
 4. Upload all the project files into the `htdocs` folder on the host, using the **File Manager** in the control panel or an FTP program such as [FileZilla](https://filezilla-project.org).
 5. Open your site's address in the browser.
 
-**Limits of free hosting:** live updates keep one request open per visitor's browser for up to 20 seconds. If the host complains about long requests, set `LIVE_WAIT_SECONDS` to `0` in `config/config.php`: pages then check every 15 seconds instead. Free hosting can also be slow, and its own email function is switched off, so the site sends email through an outside account instead (below). For a hotel taking real bookings, cheap paid hosting is more reliable. The same steps apply.
+**Limits of free hosting:** on InfinityFree, set `LIVE_WAIT_SECONDS` to `0` in `config/config.php`. Pages then check for changes every 15 seconds with a quick request, instead of keeping one request open for up to 20 seconds; free accounts only allow a few busy requests at a time and otherwise show "This site has used all available resources". On your own computer or paid hosting, `20` makes changes show within about a second. Free hosting can also be slow, and its own email function is switched off, so the site sends email through an outside account instead (below). For a hotel taking real bookings, cheap paid hosting is more reliable. The same steps apply.
 
 ---
 

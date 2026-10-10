@@ -43,6 +43,6 @@ define('SMTP_FROM_NAME', 'Ramada by Wyndham Multan');
 
 // Live updates (D17): open pages update themselves when something changes. Each open browser
 // asks the server once; the server holds the question for up to this many seconds and answers
-// as soon as something is saved. If a host complains about long requests, set 0: pages then
-// ask every 15 seconds instead.
+// as soon as something is saved. On free hosting such as InfinityFree set 0: pages then ask
+// every 15 seconds with a quick request (free accounts allow only a few busy requests at a time).
 define('LIVE_WAIT_SECONDS', 20);
