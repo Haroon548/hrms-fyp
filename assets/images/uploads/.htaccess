@@ -1,0 +1,5 @@
+# Photos uploaded from the admin panel. Only images are served from here;
+# scripts are never run, even if one were uploaded by mistake.
+<FilesMatch "\.(?i:php\d?|phtml|phar|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>
