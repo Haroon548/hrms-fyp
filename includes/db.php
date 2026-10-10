@@ -118,7 +118,7 @@ function live_versions(array $tables = [])
 // All photos for one place on the site, in order (site_photos table, FR-WEB-10).
 function site_photos($location)
 {
-    $stmt = db()->prepare('SELECT file, alt_text, is_illustrative FROM site_photos WHERE location = ? ORDER BY sort_order, id');
+    $stmt = db()->prepare('SELECT file, alt_text FROM site_photos WHERE location = ? ORDER BY sort_order, id');
     $stmt->execute([$location]);
     return $stmt->fetchAll();
 }
@@ -127,5 +127,5 @@ function site_photos($location)
 function site_photo($location, $default_alt)
 {
     $photos = site_photos($location);
-    return $photos[0] ?? ['file' => '', 'alt_text' => $default_alt, 'is_illustrative' => 0];
+    return $photos[0] ?? ['file' => '', 'alt_text' => $default_alt];
 }

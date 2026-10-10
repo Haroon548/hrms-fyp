@@ -91,14 +91,10 @@ function photo($file, $alt, $class = '')
     }
 }
 
-// A photo from site_photos (or any row with file, alt_text, is_illustrative). Photos that aren't
-// the hotel's own yet get a small "Illustrative photo" label (D22).
-function site_photo_tag($photo, $class = '')
+// A photo row from site_photos (file + alt_text), e.g. photo_row(site_photo('exterior', 'Building')).
+function photo_row($photo, $class = '')
 {
     photo($photo['file'], $photo['alt_text'], $class);
-    if (!empty($photo['is_illustrative'])) {
-        echo '<span class="illustrative-tag">Illustrative photo</span>';
-    }
 }
 
 // Formats a price as "23,995".

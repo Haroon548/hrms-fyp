@@ -53,7 +53,7 @@ include 'includes/header.php';
             <div class="dine-col<?= $c % 2 ? ' is-down' : '' ?>">
                 <?php for ($copy = 0; $copy < 2; $copy++): // twice, so the loop has no gap ?>
                     <?php foreach ($column as $p): ?>
-                        <figure class="dine-tile"><?php site_photo_tag($p); ?></figure>
+                        <figure class="dine-tile"><?php photo_row($p); ?></figure>
                     <?php endforeach; ?>
                 <?php endfor; ?>
             </div>
@@ -94,9 +94,9 @@ include 'includes/header.php';
         ?>
             <article class="place<?= $i % 2 ? ' is-flipped' : '' ?>" id="<?= e($place['slug']) ?>">
                 <div class="place-photos">
-                    <figure class="place-photo" data-parallax-photo><?php site_photo_tag($photos[0] ?? ['file' => '', 'alt_text' => $place['name']]); ?></figure>
+                    <figure class="place-photo" data-parallax-photo><?php photo_row($photos[0] ?? ['file' => '', 'alt_text' => $place['name']]); ?></figure>
                     <?php if (isset($photos[1])): ?>
-                        <figure class="place-inset"><?php site_photo_tag($photos[1]); ?></figure>
+                        <figure class="place-inset"><?php photo_row($photos[1]); ?></figure>
                     <?php endif; ?>
                 </div>
                 <div class="place-card" data-tilt-card>
@@ -131,7 +131,7 @@ include 'includes/header.php';
         <div class="dine-strip-row" data-strip>
             <?php foreach ($stripPhotos as $i => $p): ?>
                 <figure class="strip-card" style="--tilt: <?= [-3, 2, -1.5, 3, -2.5, 1.5, -2, 2.5][$i % 8] ?>deg">
-                    <div class="strip-photo"><?php site_photo_tag($p); ?></div>
+                    <div class="strip-photo"><?php photo_row($p); ?></div>
                     <figcaption><?= e($p['alt_text']) ?></figcaption>
                 </figure>
             <?php endforeach; ?>
@@ -167,7 +167,7 @@ include 'includes/header.php';
 
 <!-- 6. Reserve a table: a card on a table photo -->
 <section class="dine-reserve" id="reserve" aria-labelledby="reserveHeading">
-    <div class="dine-reserve-bg" data-parallax-photo><?php site_photo_tag($reservePhoto); ?></div>
+    <div class="dine-reserve-bg" data-parallax-photo><?php photo_row($reservePhoto); ?></div>
     <div class="container">
         <div class="reserve-card" data-tilt-card>
             <p class="place-kind">Buzz 76 · Cafe Saints · Executive Lounge</p>
@@ -186,8 +186,6 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
-
-<p class="container illustrative-note"><i class="fa-regular fa-image" aria-hidden="true"></i> Photos marked "Illustrative photo" show the kind of food and dining we offer; they aren't photos of our own dishes.</p>
 
 <?php cart_ui($cart, 'dining.php'); ?>
 <?php include 'includes/footer.php'; ?>

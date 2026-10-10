@@ -5194,26 +5194,6 @@ button.cal-day:hover {
     --paper: #FBF6EE;                                    /* warm cream of a printed menu */
     --paper-line: #E9DFD0;
 }
-.illustrative-tag {
-    position: absolute;
-    left: 8px;
-    bottom: 8px;
-    z-index: 2;
-    padding: 2px 8px;
-    background: rgba(20, 14, 16, 0.62);
-    color: rgba(255, 255, 255, 0.92);
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    line-height: 1.6;
-    pointer-events: none;
-}
-.illustrative-note {
-    margin: 0 auto;
-    padding: 18px 16px 40px;
-    font-size: 13px;
-    color: var(--muted);
-    text-align: center;
-}
 
 /* 1. Drifting photo wall */
 .dine-hero {

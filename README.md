@@ -139,7 +139,7 @@ The site uses these free libraries and fonts, stored in `assets/vendor/` and `as
 
 - [GLightbox](https://biati-digital.github.io/glightbox/) 3.3.1 (photo viewer), MIT License
 - [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) 1.4.4 (table QR codes), MIT License
-- Dining page photos in `assets/images/dining/` are temporary illustrative photos, labelled on the page. Replace them with the hotel's own photos before the site goes public (from the admin panel once its site-photos page is built, FR-WEB-10; until then by replacing the files).
+- Dining page photos in `assets/images/dining/` are temporary food photos (not the hotel's own dishes). Replace them with the hotel's own photos before the site goes public (from the admin panel once its site-photos page is built, FR-WEB-10; until then by replacing the files).
 
 Photos and logos belong to Ramada by Wyndham Multan and are used with permission. The Multan photos in the gallery come from [Wikimedia Commons](https://commons.wikimedia.org) under Creative Commons licences; each photographer is credited on the Gallery page.
 

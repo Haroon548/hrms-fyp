@@ -248,7 +248,6 @@ Brand stays the same (red, Fira Sans, real photos); the layout is livelier than 
 - **Cart:** a red pill button bottom right ("🧺 3 · Your order · PKR 5,850", full width on phones) that pops when a dish is added and opens a right-hand panel with − / + per line, the total and CONTINUE TO ORDER.
 - **Order page** (`order/checkout.php`): dark bar with the 3 steps, then three large option cards (Takeaway / Dine-in / Room service; room service greyed out unless checked in, showing "To room 104…" when allowed), the table list (only for dine-in), a kitchen note, and PLACE ORDER · PKR total; dish summary on the right.
 - **Order status page** (`order/view.php`): dark hero with the order type icon, a 4-step progress line (current step red with a soft pulse, done steps green), "Live: this page changes as soon as the kitchen moves your order on", the dishes, and a side card with links and Cancel order (only while Received).
-- **Illustrative photos** carry a small dark "Illustrative photo" label in their corner, and a line under the page explains it.
 
 ### ★ QR table menu (opened by scanning a table's QR code)
 

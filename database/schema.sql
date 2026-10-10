@@ -379,7 +379,6 @@ CREATE TABLE site_photos (
     location   VARCHAR(50)  NOT NULL,
     file       VARCHAR(255) NOT NULL,
     alt_text   VARCHAR(150) NOT NULL DEFAULT '',
-    is_illustrative TINYINT(1) NOT NULL DEFAULT 0,  -- not the hotel's own photo yet: labelled "Illustrative photo" (D22)
     sort_order INT          NOT NULL DEFAULT 0,
     KEY idx_site_photos_location (location, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -502,36 +501,36 @@ INSERT INTO site_photos (location, file, alt_text, sort_order) VALUES
 -- The hotel building with its RAMADA sign (for the About and Contact pages)
 ('exterior', 'home/exterior.jpg', 'Ramada by Wyndham Multan building', 1);
 
--- Dining page (FR-WEB-02). Photos in dining/ are TEMPORARY illustrative photos (D22),
--- labelled on the page; replace them with the hotel's own food photos from the admin panel.
-INSERT INTO site_photos (location, file, alt_text, is_illustrative, sort_order) VALUES
-('dining_hero', 'gallery/restaurants/restaurants-02.jpg', 'Buzz 76 dining hall', 0, 1),
-('dining_hero', 'dining/family-dinner.jpg', 'A family sharing karahi, kebabs, biryani and naan', 1, 2),
-('dining_hero', 'gallery/restaurants/restaurants-05.jpg', 'Buffet counter', 0, 3),
-('dining_hero', 'gallery/restaurants/restaurants-08.jpg', 'Hi-tea spread with cakes and pastries', 0, 4),
-('dining_hero', 'gallery/restaurants/restaurants-07.jpg', 'Hi-tea table', 0, 5),
-('dining_hero', 'dining/chef-plating.jpg', 'A chef plating a dish', 1, 6),
-('dining_hero', 'gallery/restaurants/restaurants-11.jpg', 'Executive Lounge', 0, 7),
-('dining_hero', 'gallery/restaurants/restaurants-10.jpg', 'Live buffet stations', 0, 8),
-('dining_hero', 'gallery/restaurants/restaurants-09.jpg', 'Desserts at hi-tea', 0, 9),
-('dining_hero', 'dining/breakfast-buffet.jpg', 'Breakfast pastries', 1, 10),
-('dining_hero', 'gallery/restaurants/restaurants-06.jpg', 'Curries at the buffet', 0, 11),
-('dining_hero', 'home/cafe-saints.jpg', 'Cafe Saints by the pool at night', 0, 12),
-('dining_buzz-76', 'gallery/restaurants/restaurants-02.jpg', 'Buzz 76 dining hall', 0, 1),
-('dining_buzz-76', 'gallery/restaurants/restaurants-05.jpg', 'Buffet counter at Buzz 76', 0, 2),
-('dining_cafe-saints', 'home/cafe-saints.jpg', 'Cafe Saints by the pool at night', 0, 1),
-('dining_cafe-saints', 'facilities/pool.jpg', 'The pool beside Cafe Saints', 0, 2),
-('dining_executive-lounge', 'gallery/restaurants/restaurants-11.jpg', 'Executive Lounge', 0, 1),
-('dining_executive-lounge', 'gallery/restaurants/restaurants-15.jpg', 'Executive Lounge seating', 0, 2),
-('dining_strip', 'dining/family-dinner.jpg', 'Family dinners', 1, 1),
-('dining_strip', 'gallery/restaurants/restaurants-10.jpg', 'Live buffet stations', 0, 2),
-('dining_strip', 'gallery/restaurants/restaurants-07.jpg', 'Dessert counter', 0, 3),
-('dining_strip', 'gallery/restaurants/restaurants-08.jpg', 'Hi-tea', 0, 4),
-('dining_strip', 'dining/chef-plating.jpg', 'Cooked to order', 1, 5),
-('dining_strip', 'gallery/restaurants/restaurants-03.jpg', 'Buzz 76', 0, 6),
-('dining_strip', 'dining/breakfast-buffet.jpg', 'Breakfast buffet', 1, 7),
-('dining_strip', 'dining/dining-room.jpg', 'Evenings out', 1, 8),
-('dining_reserve', 'gallery/restaurants/restaurants-01.jpg', 'A table laid for dinner at Buzz 76', 0, 1);
+-- Dining page (FR-WEB-02). Photos in dining/ are TEMPORARY food photos (D22).
+-- Replace them with the hotel's own food photos from the admin panel.
+INSERT INTO site_photos (location, file, alt_text, sort_order) VALUES
+('dining_hero', 'gallery/restaurants/restaurants-02.jpg', 'Buzz 76 dining hall', 1),
+('dining_hero', 'dining/family-dinner.jpg', 'A family sharing karahi, kebabs, biryani and naan', 2),
+('dining_hero', 'gallery/restaurants/restaurants-05.jpg', 'Buffet counter', 3),
+('dining_hero', 'gallery/restaurants/restaurants-08.jpg', 'Hi-tea spread with cakes and pastries', 4),
+('dining_hero', 'gallery/restaurants/restaurants-07.jpg', 'Hi-tea table', 5),
+('dining_hero', 'dining/chef-plating.jpg', 'A chef plating a dish', 6),
+('dining_hero', 'gallery/restaurants/restaurants-11.jpg', 'Executive Lounge', 7),
+('dining_hero', 'gallery/restaurants/restaurants-10.jpg', 'Live buffet stations', 8),
+('dining_hero', 'gallery/restaurants/restaurants-09.jpg', 'Desserts at hi-tea', 9),
+('dining_hero', 'dining/breakfast-buffet.jpg', 'Breakfast pastries', 10),
+('dining_hero', 'gallery/restaurants/restaurants-06.jpg', 'Curries at the buffet', 11),
+('dining_hero', 'home/cafe-saints.jpg', 'Cafe Saints by the pool at night', 12),
+('dining_buzz-76', 'gallery/restaurants/restaurants-02.jpg', 'Buzz 76 dining hall', 1),
+('dining_buzz-76', 'gallery/restaurants/restaurants-05.jpg', 'Buffet counter at Buzz 76', 2),
+('dining_cafe-saints', 'home/cafe-saints.jpg', 'Cafe Saints by the pool at night', 1),
+('dining_cafe-saints', 'facilities/pool.jpg', 'The pool beside Cafe Saints', 2),
+('dining_executive-lounge', 'gallery/restaurants/restaurants-11.jpg', 'Executive Lounge', 1),
+('dining_executive-lounge', 'gallery/restaurants/restaurants-15.jpg', 'Executive Lounge seating', 2),
+('dining_strip', 'dining/family-dinner.jpg', 'Family dinners', 1),
+('dining_strip', 'gallery/restaurants/restaurants-10.jpg', 'Live buffet stations', 2),
+('dining_strip', 'gallery/restaurants/restaurants-07.jpg', 'Dessert counter', 3),
+('dining_strip', 'gallery/restaurants/restaurants-08.jpg', 'Hi-tea', 4),
+('dining_strip', 'dining/chef-plating.jpg', 'Cooked to order', 5),
+('dining_strip', 'gallery/restaurants/restaurants-03.jpg', 'Buzz 76', 6),
+('dining_strip', 'dining/breakfast-buffet.jpg', 'Breakfast buffet', 7),
+('dining_strip', 'dining/dining-room.jpg', 'Evenings out', 8),
+('dining_reserve', 'gallery/restaurants/restaurants-01.jpg', 'A table laid for dinner at Buzz 76', 1);
 
 -- Meeting & Events page (FR-WEB-07, FR-WEB-10): the hotel's own banquet photos.
 INSERT INTO site_photos (location, file, alt_text, sort_order) VALUES
