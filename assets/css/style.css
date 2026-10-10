@@ -7611,16 +7611,6 @@ button.cal-day:hover {
 
 /* ---------- Live updates (FR-LIVE-01, assets/js/live.js) ---------- */
 
-/* A part of the page that just changed by itself glows red for a moment */
-.is-live-updated {
-    animation: live-glow 1.6s var(--ease-out);
-}
-@keyframes live-glow {
-    0%   { box-shadow: 0 0 0 0 rgba(210, 18, 66, 0); }
-    15%  { box-shadow: 0 0 0 4px rgba(210, 18, 66, 0.28); }
-    100% { box-shadow: 0 0 0 12px rgba(210, 18, 66, 0); }
-}
-
 /* "This page has new information · Update", when the visitor is busy typing in that part */
 .live-bar {
     position: fixed;
@@ -7690,7 +7680,6 @@ button.cal-day:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .is-live-updated,
     .live-bar {
         animation: none;
     }

@@ -55,9 +55,9 @@ $first_name = $user ? explode(' ', trim($user['name']))[0] : '';
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/vendor/fontawesome-7.3.1/css/all.min.css') ?>">
     <?php foreach ($extra_styles ?? [] as $stylesheet): ?>
-    <link rel="stylesheet" href="<?= e(url($stylesheet)) ?>">
+    <link rel="stylesheet" href="<?= e(asset($stylesheet)) ?>">
     <?php endforeach; ?>
-    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 </head>
 <body class="<?= e($body_class) ?>"<?= live_body_attrs() ?>>
 

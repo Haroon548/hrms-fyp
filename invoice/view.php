@@ -37,7 +37,7 @@ $back = is_admin() ? 'admin/invoices.php' : 'account/index.php?tab=invoices';
     <title><?= e($invoice['invoice_number']) ?> | <?= e(HOTEL_NAME) ?></title>
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/vendor/fontawesome-7.3.1/css/all.min.css') ?>">
-    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 </head>
 <?php live_watch('invoices'); // the PAID stamp appears as soon as the desk marks it paid ?>
 <body class="invoice-body"<?= live_body_attrs() ?>>
@@ -114,6 +114,6 @@ $back = is_admin() ? 'admin/invoices.php' : 'account/index.php?tab=invoices';
         <p class="invoice-muted"><?= e(HOTEL_NAME) ?> · <?= e(SITE_URL) ?></p>
     </footer>
 </main>
-<script src="<?= url('assets/js/live.js') ?>"></script>
+<script src="<?= asset('assets/js/live.js') ?>"></script>
 </body>
 </html>

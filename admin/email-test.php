@@ -60,5 +60,5 @@ admin_open('Email check', 'email', 'Make sure booking confirmations, sign-up cod
         <div class="admin-inline-buttons"><button type="submit" class="btn-primary-red btn-complete" data-busy="SENDING…"><i class="fa-regular fa-paper-plane" aria-hidden="true"></i> Send test</button></div>
     </form>
 </section>
-<script src="<?= url('assets/js/checkout.js') ?>"></script>
+<script src="<?= asset('assets/js/checkout.js') ?>"></script>
 <?php admin_close();

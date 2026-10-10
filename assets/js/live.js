@@ -8,8 +8,8 @@
  *  2. live.php holds the question "has anything changed?" open for up to 20 seconds and
  *     answers the moment something is saved, so changes show within about a second.
  *  3. When one of the page's tables has a new version, the page loads itself again in the
- *     background and swaps only its live parts ([data-live-region]). A part where the visitor
- *     is typing is left alone; a small bar offers "Update" instead.
+ *     background and swaps only its live parts ([data-live-region]), quietly. A part where the
+ *     visitor is typing is left alone; a small bar offers "Update" instead.
  *  4. Only one visible tab per browser asks the server and shares the answer with the others
  *     (Web Locks + BroadcastChannel). Hidden tabs catch up when they are shown again.
  * Other scripts can listen for "live:change" (tables changed) and "live:updated" (a part was swapped).
@@ -87,9 +87,6 @@
             region.innerHTML = next.innerHTML;
             lastHtml.set(region, next.innerHTML);
             restoreScroll(region, scrolls);
-            region.classList.remove('is-live-updated');
-            void region.offsetWidth; // restart the short highlight
-            region.classList.add('is-live-updated');
             document.dispatchEvent(new CustomEvent('live:updated', { detail: { region: region } }));
         });
         return blocked;

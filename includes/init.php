@@ -51,6 +51,15 @@ function url($path = '')
     return base_path() . '/' . ltrim($path, '/');
 }
 
+// Link to our own CSS or JS file with a version stamp (when the file last changed), so browsers
+// load the new copy straight after an update instead of a saved old one. Hosts like InfinityFree
+// tell browsers to keep these files for 30 days.
+function asset($path)
+{
+    $file = __DIR__ . '/../' . ltrim($path, '/');
+    return url($path) . (is_file($file) ? '?v=' . filemtime($file) : '');
+}
+
 function redirect($path)
 {
     header('Location: ' . url($path));
@@ -109,6 +118,9 @@ function status_badge($status)
     $styles = [
         'available'   => ['Available', 'badge-green'],
         'maintenance' => ['Under maintenance', 'badge-yellow'],
+        'free'        => ['Free tonight', 'badge-green'],
+        'occupied'    => ['Occupied', 'badge-blue'],
+        'booked_tonight' => ['Booked tonight', 'badge-blue'],
         'confirmed'   => ['Confirmed', 'badge-blue'],
         'checked_in'  => ['Checked in', 'badge-green'],
         'checked_out' => ['Checked out', 'badge-dark'],

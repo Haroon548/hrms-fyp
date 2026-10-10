@@ -97,7 +97,7 @@ if (isset($_GET['board'])) {
     <meta name="theme-color" content="#1B1416">
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/vendor/fontawesome-7.3.1/css/all.min.css') ?>">
-    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 </head>
 <?php live_watch('orders'); ?>
 <body class="kitchen-body"<?= live_body_attrs() ?>>
@@ -112,7 +112,7 @@ if (isset($_GET['board'])) {
 <main id="board" data-board-url="<?= e(url('admin/kitchen.php?board=1')) ?>" aria-live="polite">
     <?php kitchen_board(); ?>
 </main>
-<script src="<?= url('assets/js/kitchen.js') ?>"></script>
-<script src="<?= url('assets/js/live.js') ?>"></script>
+<script src="<?= asset('assets/js/kitchen.js') ?>"></script>
+<script src="<?= asset('assets/js/live.js') ?>"></script>
 </body>
 </html>

@@ -64,10 +64,10 @@ $page_scripts = $page_scripts ?? [];
 <button type="button" class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
 
 <script src="<?= url('assets/vendor/bootstrap-5.3.8/js/bootstrap.bundle.min.js') ?>"></script>
-<script src="<?= url('assets/js/main.js') ?>"></script>
+<script src="<?= asset('assets/js/main.js') ?>"></script>
 <?php foreach ($page_scripts as $script): ?>
-<script src="<?= e(url($script)) ?>"></script>
+<script src="<?= e(asset($script)) ?>"></script>
 <?php endforeach; ?>
-<script src="<?= url('assets/js/live.js') ?>"></script>
+<script src="<?= asset('assets/js/live.js') ?>"></script>
 </body>
 </html>

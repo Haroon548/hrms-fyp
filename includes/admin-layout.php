@@ -61,7 +61,7 @@ function admin_open($title, $active, $subtitle = '', $actions = '')
     <meta name="theme-color" content="#1B1416">
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap-5.3.8/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/vendor/fontawesome-7.3.1/css/all.min.css') ?>">
-    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>">
 </head>
 <body class="admin-body"<?= live_body_attrs() ?>>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -124,9 +124,9 @@ function admin_close()
 </div>
 
 <script src="<?= url('assets/vendor/bootstrap-5.3.8/js/bootstrap.bundle.min.js') ?>"></script>
-<script src="<?= url('assets/js/main.js') ?>"></script>
-<script src="<?= url('assets/js/admin.js') ?>"></script>
-<script src="<?= url('assets/js/live.js') ?>"></script>
+<script src="<?= asset('assets/js/main.js') ?>"></script>
+<script src="<?= asset('assets/js/admin.js') ?>"></script>
+<script src="<?= asset('assets/js/live.js') ?>"></script>
 </body>
 </html>
     <?php
