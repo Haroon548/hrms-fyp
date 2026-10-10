@@ -134,3 +134,19 @@ function short_date($date)
 {
     return date('D j M', strtotime($date));
 }
+
+/*
+ * Puts a room type at a place in the list (1 = first) and numbers all room types 1, 2, 3 …
+ * so "Position" always means the real place on the Rooms and Home pages, with no ties.
+ */
+function place_room_type($typeId, $position)
+{
+    $ids = db()->prepare('SELECT id FROM room_types WHERE id <> ? ORDER BY sort_order, name');
+    $ids->execute([(int) $typeId]);
+    $ids = $ids->fetchAll(PDO::FETCH_COLUMN);
+    array_splice($ids, max(0, min(count($ids), (int) $position - 1)), 0, [(int) $typeId]);
+    $save = db()->prepare('UPDATE room_types SET sort_order = ? WHERE id = ?');
+    foreach ($ids as $i => $id) {
+        $save->execute([$i + 1, $id]);
+    }
+}

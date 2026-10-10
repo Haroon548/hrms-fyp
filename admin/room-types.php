@@ -9,8 +9,20 @@ require_once '../includes/rooms.php';
 require_once '../includes/admin-layout.php';
 require_admin();
 
+$action = admin_action();
+
+// Move a room type one place up or down in the list (the order on the Rooms and Home pages)
+if ($action === 'move') {
+    $ids = db()->query('SELECT id FROM room_types ORDER BY sort_order, name')->fetchAll(PDO::FETCH_COLUMN);
+    $at = array_search((int) ($_POST['id'] ?? 0), array_map('intval', $ids), true);
+    if ($at !== false) {
+        place_room_type($ids[$at], $at + 1 + (($_POST['direction'] ?? '') === 'up' ? -1 : 1));
+    }
+    redirect('admin/room-types.php#type-' . (int) ($_POST['id'] ?? 0));
+}
+
 // Show or hide a room type on the website, straight from the list
-if (admin_action() === 'toggle') {
+if ($action === 'toggle') {
     $stmt = db()->prepare('UPDATE room_types SET is_active = 1 - is_active WHERE id = ?');
     $stmt->execute([(int) $_POST['id']]);
     $stmt = db()->prepare('SELECT name, is_active FROM room_types WHERE id = ?');
@@ -45,7 +57,7 @@ admin_open('Room types', 'room-types', 'Prices, guests, amenities and photos for
     </div>
 <?php else: ?>
     <div class="admin-list">
-        <?php foreach ($types as $type):
+        <?php foreach ($types as $i => $type):
             // Things that stop guests booking this room type
             $warnings = [];
             if ($type['price_per_night'] === null) $warnings[] = 'No price yet: guests see "Price on request" and can\'t book';
@@ -53,7 +65,7 @@ admin_open('Room types', 'room-types', 'Prices, guests, amenities and photos for
             if ((int) $type['room_count'] === 0) $warnings[] = 'No rooms of this type, so it can\'t be booked';
             elseif ((int) $type['rooms_open'] === 0) $warnings[] = 'Every room of this type is under maintenance';
         ?>
-            <article class="admin-row<?= $type['is_active'] ? '' : ' is-hidden' ?>">
+            <article id="type-<?= (int) $type['id'] ?>" class="admin-row<?= $type['is_active'] ? '' : ' is-hidden' ?>">
                 <a href="<?= url('admin/room-type.php?id=' . $type['id']) ?>" class="admin-row-photo" tabindex="-1" aria-hidden="true">
                     <?php photo($type['photo'] ?? '', $type['name']); ?>
                 </a>
@@ -75,6 +87,12 @@ admin_open('Room types', 'room-types', 'Prices, guests, amenities and photos for
                 <div class="admin-row-side">
                     <?= status_badge($type['is_active'] ? 'shown' : 'hidden') ?>
                     <div class="admin-row-buttons">
+                        <?php foreach (['up' => ['fa-arrow-up', 'Move up', $i > 0], 'down' => ['fa-arrow-down', 'Move down', $i < count($types) - 1]] as $dir => [$icon, $label, $can]): ?>
+                            <form method="post"><?= csrf_field() ?>
+                                <input type="hidden" name="action" value="move"><input type="hidden" name="id" value="<?= (int) $type['id'] ?>"><input type="hidden" name="direction" value="<?= $dir ?>">
+                                <button type="submit" class="btn-icon" aria-label="<?= e($label . ': ' . $type['name']) ?>" title="<?= $label ?>"<?= $can ? '' : ' disabled' ?>><i class="fa-solid <?= $icon ?>" aria-hidden="true"></i></button>
+                            </form>
+                        <?php endforeach; ?>
                         <a href="<?= url('admin/room-type.php?id=' . $type['id']) ?>" class="btn-small-red"><i class="fa-solid fa-pen" aria-hidden="true"></i> Edit</a>
                         <form method="post"><?= csrf_field() ?>
                             <input type="hidden" name="action" value="toggle">

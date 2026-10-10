@@ -53,7 +53,7 @@ function check_room_type_form(array $in, $currentId)
         'max_adults'   => trim($in['max_adults'] ?? ''),
         'max_children' => trim($in['max_children'] ?? ''),
         'amenities'    => implode("\n", amenity_list($in['amenities'] ?? '')),
-        'sort_order'   => (int) ($in['sort_order'] ?? 0),
+        'sort_order'   => max(1, (int) ($in['sort_order'] ?? 1)),
         'is_active'    => !empty($in['is_active']) ? 1 : 0,
     ];
     $errors = [];
@@ -148,7 +148,7 @@ function save_photo_order(array $ids)
 $errors = [];
 $values = $type ?: [
     'name' => '', 'description' => '', 'price_per_night' => null, 'beds' => '', 'feature' => '',
-    'max_adults' => 2, 'max_children' => 1, 'amenities' => '', 'sort_order' => 0, 'is_active' => 1,
+    'max_adults' => 2, 'max_children' => 1, 'amenities' => '', 'sort_order' => count(room_types(true)) + 1, 'is_active' => 1,
 ];
 $action = admin_action();
 
@@ -178,6 +178,7 @@ switch ($action) {
             $stmt = db()->prepare('UPDATE room_types SET name = ?, description = ?, price_per_night = ?, beds = ?, feature = ?,
                 max_adults = ?, max_children = ?, amenities = ?, sort_order = ?, is_active = ? WHERE id = ?');
             $stmt->execute(array_merge($fields, [$type['id']]));
+            place_room_type($type['id'], $clean['sort_order']);
             flash('success', 'Saved. The website now shows the new details for ' . $clean['name'] . '.');
             if ($note = booked_guests_note($type, $clean)) {
                 flash('info', $note);
@@ -187,8 +188,10 @@ switch ($action) {
         $stmt = db()->prepare('INSERT INTO room_types (name, description, price_per_night, beds, feature, max_adults, max_children,
             amenities, sort_order, is_active, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute(array_merge($fields, [unique_room_slug($clean['name'])]));
+        $newId = (int) db()->lastInsertId();
+        place_room_type($newId, $clean['sort_order']);
         flash('success', $clean['name'] . ' has been added. Now upload its photos below, then add its rooms on the Rooms page.');
-        redirect('admin/room-type.php?id=' . db()->lastInsertId() . '#photos');
+        redirect('admin/room-type.php?id=' . $newId . '#photos');
 
     case 'upload':
         if (!$type) break;
@@ -359,8 +362,8 @@ admin_open($type ? $type['name'] : 'Add a room type', 'room-types',
                 'One per line. Shown as the "Room Details" list on the room page.'); ?>
         </div>
         <div class="col-md-4">
-            <?php admin_field('sort_order', 'Position in lists', '<input type="number" {attrs} value="' . e($values['sort_order']) . '" min="0" max="999">', $errors,
-                'Lower numbers come first on the Rooms and Home pages.'); ?>
+            <?php admin_field('sort_order', 'Position in lists', '<input type="number" {attrs} value="' . e($values['sort_order']) . '" min="1" max="999">', $errors,
+                '1 = first on the Rooms and Home pages; the others move to make room. Or use ↑ ↓ on the Room types list.'); ?>
             <label class="admin-check">
                 <input type="checkbox" name="is_active" value="1"<?= $values['is_active'] ? ' checked' : '' ?>>
                 <span>Show on the website</span>
