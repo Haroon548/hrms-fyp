@@ -5,8 +5,9 @@ config/config.php
 backups/
 *.sql.bak
 
-# Logs
+# Logs, and copies of sent emails (they contain private links)
 *.log
+logs/
 
 # OS files
 .DS_Store
@@ -16,3 +17,7 @@ desktop.ini
 # Editor settings
 .vscode/
 .idea/
+
+# Photos uploaded from the admin panel (they belong to each installation)
+assets/images/uploads/*
+!assets/images/uploads/.htaccess
