@@ -60,6 +60,9 @@ switch (admin_action()) {
 
 $nights = booking_nights($booking);
 $moves = next_statuses($booking);
+$roomStatus = db()->prepare('SELECT status FROM rooms WHERE id = ?');
+$roomStatus->execute([$booking['room_id']]);
+$roomInMaintenance = $roomStatus->fetchColumn() === 'maintenance';
 $bill = $booking['status'] === 'checked_in' ? running_bill($booking) : null;
 $stmt = db()->prepare('SELECT id, invoice_number, status FROM invoices WHERE booking_id = ?');
 $stmt->execute([$booking['id']]);
@@ -147,6 +150,10 @@ admin_open('Booking ' . $booking['reference'], 'bookings', $booking['guest_name'
 
         <section class="admin-card">
             <h2>Actions</h2>
+            <?php if ($roomInMaintenance && in_array($booking['status'], ['confirmed', 'checked_in'], true)): ?>
+                <div class="notice notice-error" role="status"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                    <span>Room <?= e($booking['room_number']) ?> is under maintenance.<?= $booking['status'] === 'confirmed' ? ' Move the guest to another room before checking them in, or mark the room available if it\'s ready.' : ' The guest is staying in it: move them to another room if it can\'t be used.' ?></span></div>
+            <?php endif; ?>
             <?php if ($moves): ?>
                 <div class="status-actions">
                     <?php foreach ($moves as $status => $label): ?>

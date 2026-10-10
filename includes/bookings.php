@@ -165,6 +165,15 @@ function change_booking_status($booking, $status)
     if (!isset(next_statuses($booking)[$status])) {
         return 'That change isn\'t possible for this booking any more. The page has been refreshed.';
     }
+    // A guest can't be checked in to a room that is under maintenance (FR-SAFE-08)
+    if ($status === 'checked_in') {
+        $stmt = db()->prepare('SELECT status FROM rooms WHERE id = ?');
+        $stmt->execute([$booking['room_id']]);
+        if ($stmt->fetchColumn() === 'maintenance') {
+            return 'Room ' . $booking['room_number'] . ' is under maintenance, so ' . $booking['guest_name'] . ' can\'t be checked in to it. '
+                . 'Move the guest to another room first (Move to another room on the booking), or mark the room available on the Rooms page if it\'s ready.';
+        }
+    }
     // Room service still being made would miss the stay's bill, or be charged before it arrives
     if ($status === 'checked_out') {
         $stmt = db()->prepare("SELECT id FROM orders WHERE booking_id = ? AND status IN ('pending', 'preparing', 'ready') ORDER BY id");
